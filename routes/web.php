@@ -3,6 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\AutoController;
+
+Route::resource('autos', AutoController::class);
+
 
 Route::get('/', function () {
     return view('welcome');
