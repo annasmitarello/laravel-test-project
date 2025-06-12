@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Auto;
+use App\Models\Tag;
+
 
 class AutoController extends Controller
 {
@@ -15,22 +17,34 @@ class AutoController extends Controller
 
     public function create()
     {
-        return view('autos.create');
+        $tags = Tag::all();
+        return view('autos.create', compact('tags'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
         $request->validate([
             'patente' => 'required|unique:autos',
             'color' => 'required',
             'modelo' => 'required',
+            'tag_ids' => 'array|nullable',
+            'tag_ids.*' => 'exists:tags,id',
         ]);
 
-        Auto::create($request->all());
+        // Crear el auto
+        $auto = Auto::create([
+            'patente' => $request->patente,
+            'color' => $request->color,
+            'modelo' => $request->modelo,
+        ]);
+
+        // Asociar tags si se seleccionaron
+        if ($request->has('tag_ids')) {
+            $auto->tags()->attach($request->tag_ids);
+        }
 
         return redirect()->route('autos.index')->with('success', 'Auto creado correctamente.');
     }
-
     public function show(Auto $auto)
     {
         return view('autos.show', compact('auto'));
@@ -60,4 +74,7 @@ class AutoController extends Controller
 
         return redirect()->route('autos.index')->with('success', 'Auto eliminado correctamente.');
     }
+
+    
+
 }

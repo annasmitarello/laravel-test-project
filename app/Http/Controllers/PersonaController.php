@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Persona;
 use function view;
+use App\Models\Tag;
+
 
 class PersonaController extends Controller
 {
@@ -23,28 +25,32 @@ class PersonaController extends Controller
      */
     public function create()
     {
-        return view ('personas.create');
+        $tags = Tag::all();
+        return view('personas.create', compact('tags'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    
+     public function store(Request $request)
     {
-         $request->validate([
-            'nombre' => 'required',
-            'apellido' => 'required',
-            'fecha_nacimiento' => 'required|date',
-        ]);
+    $request->validate([
+        'nombre' => 'required',
+        'apellido' => 'required',
+        'fecha_nacimiento' => 'required|date',
+    ]);
 
-        Persona::create($request->all());
+    $persona = Persona::create($request->only(['nombre', 'apellido', 'fecha_nacimiento']));
 
-        return redirect()->route('personas.index')->with('success', 'Persona creada con éxito.');
+    // Asociar los tags seleccionados (si los hay)
+    if ($request->filled('tag_ids')) {
+        $persona->tags()->attach($request->tag_ids);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    return redirect()->route('personas.index')->with('success', 'Persona creada con éxito.');
+    }
+
     
     public function show(Persona $persona)
    {

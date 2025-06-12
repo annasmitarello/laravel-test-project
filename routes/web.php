@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\AutoController;
+use App\Http\Controllers\TagController;
 
 Route::resource('autos', AutoController::class);
 
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('personas', PersonaController::class)->middleware('auth');
+
+Route::resource('tags', TagController::class);
+
 
 
 require __DIR__.'/auth.php';

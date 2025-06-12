@@ -36,4 +36,14 @@
         <a href="{{ route('personas.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+<div class="mb-4">
+    <label class="block font-medium">Tags</label>
+    <select name="tag_ids[]" multiple class="w-full border px-3 py-2 rounded">
+        @foreach($tags as $tag)
+            <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tag_ids', $selectedTags ?? [])) ? 'selected' : '' }}>
+                {{ $tag->nombre }}
+            </option>
+        @endforeach
+    </select>
+</div>
 @endsection
