@@ -36,12 +36,12 @@
         </div>
 
         <div>
-            <label for="tag_ids" class="block font-medium text-gray-700">Tags</label>
-            <select name="tag_ids[]" id="tag_ids" multiple
+            <label for="auto_ids" class="block font-medium text-gray-700">Autos asociados</label>
+            <select name="auto_ids[]" id="auto_ids" multiple
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tag_ids', $selectedTags ?? [])) ? 'selected' : '' }}>
-                        {{ $tag->nombre }}
+                @foreach($autos as $auto)
+                    <option value="{{ $auto->id }}" {{ in_array($auto->id, old('auto_ids', [])) ? 'selected' : '' }}>
+                        {{ $auto->patente }} - {{ $auto->modelo }}
                     </option>
                 @endforeach
             </select>

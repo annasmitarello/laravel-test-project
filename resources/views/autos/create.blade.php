@@ -31,19 +31,20 @@
             @error('modelo') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
         </div>
 
+        <div>
+            <label class="block font-medium mb-1">Personas asociadas</label>
+            <select name="persona_ids[]" multiple class="w-full border px-3 py-2 rounded">
+                @foreach($personas as $persona)
+                    <option value="{{ $persona->id }}" {{ in_array($persona->id, old('persona_ids', [])) ? 'selected' : '' }}>
+                        {{ $persona->nombre }} {{ $persona->apellido }}
+                    </option>
+                @endforeach
+            </select>
+            @error('persona_ids') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+        </div>
+
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
         <a href="{{ route('autos.index') }}" class="text-gray-600 hover:underline ml-4">Cancelar</a>
     </form>
 </div>
-<div class="mb-4">
-    <label class="block font-medium">Tags</label>
-    <select name="tag_ids[]" multiple class="w-full border px-3 py-2 rounded">
-        @foreach($tags as $tag)
-            <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tag_ids', $selectedTags ?? [])) ? 'selected' : '' }}>
-                {{ $tag->nombre }}
-            </option>
-        @endforeach
-    </select>
-</div>
-
 @endsection

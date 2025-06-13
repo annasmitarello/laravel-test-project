@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Personas;
 class Auto extends Model
 {
     protected $fillable = [
@@ -13,8 +13,8 @@ class Auto extends Model
     'modelo',
 ];
 
-    public function tags(): MorphToMany
+      public function personas(): BelongsToMany
     {
-    return $this->morphToMany(Tag::class, 'taggable');
+        return $this->belongsToMany(Persona::class);
     }
 }

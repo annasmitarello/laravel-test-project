@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Autos;
+
 
 class Persona extends Model
 {
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento'];
 
-    public function tags(): MorphToMany
+    public function autos(): BelongsToMany
     {
-        return $this->morphToMany(Tag::class, 'taggable');
+    return $this->belongsToMany(Auto::class);
     }
+
 }

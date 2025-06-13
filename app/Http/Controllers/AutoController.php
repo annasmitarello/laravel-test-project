@@ -1,58 +1,58 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Auto;
-use App\Models\Tag;
-
+use App\Models\Persona;
 
 class AutoController extends Controller
 {
     public function index()
     {
-        $autos = Auto::all();
+        $autos = Auto::with('personas')->get();
         return view('autos.index', compact('autos'));
     }
 
     public function create()
     {
-        $tags = Tag::all();
-        return view('autos.create', compact('tags'));
+        $personas = Persona::all();
+        return view('autos.create', compact('personas'));
     }
 
-        public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'patente' => 'required|unique:autos',
             'color' => 'required',
             'modelo' => 'required',
-            'tag_ids' => 'array|nullable',
-            'tag_ids.*' => 'exists:tags,id',
+            'persona_ids' => 'array|nullable',
+            'persona_ids.*' => 'exists:personas,id',
         ]);
 
-        // Crear el auto
         $auto = Auto::create([
             'patente' => $request->patente,
             'color' => $request->color,
             'modelo' => $request->modelo,
         ]);
 
-        // Asociar tags si se seleccionaron
-        if ($request->has('tag_ids')) {
-            $auto->tags()->attach($request->tag_ids);
+        if ($request->has('persona_ids')) {
+            $auto->personas()->attach($request->persona_ids);
         }
 
         return redirect()->route('autos.index')->with('success', 'Auto creado correctamente.');
     }
+
     public function show(Auto $auto)
     {
+        $auto->load('personas');
         return view('autos.show', compact('auto'));
     }
 
     public function edit(Auto $auto)
     {
-        return view('autos.edit', compact('auto'));
+        $personas = Persona::all();
+        $auto->load('personas');
+        return view('autos.edit', compact('auto', 'personas'));
     }
 
     public function update(Request $request, Auto $auto)
@@ -61,20 +61,22 @@ class AutoController extends Controller
             'patente' => 'required|unique:autos,patente,' . $auto->id,
             'color' => 'required',
             'modelo' => 'required',
+            'persona_ids' => 'array|nullable',
+            'persona_ids.*' => 'exists:personas,id',
         ]);
 
-        $auto->update($request->all());
+        $auto->update($request->only(['patente', 'color', 'modelo']));
+
+        $auto->personas()->sync($request->persona_ids ?? []);
 
         return redirect()->route('autos.index')->with('success', 'Auto actualizado correctamente.');
     }
 
     public function destroy(Auto $auto)
     {
+        $auto->personas()->detach();
         $auto->delete();
 
         return redirect()->route('autos.index')->with('success', 'Auto eliminado correctamente.');
     }
-
-    
-
 }
