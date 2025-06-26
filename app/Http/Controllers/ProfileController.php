@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
+
 
 class ProfileController extends Controller
 {
@@ -56,5 +58,24 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+
+    public function index()
+    {
+        return response()->json(User::all());
+    }
+
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+
+    
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+    
+    return response()->json($user);
     }
 }

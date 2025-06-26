@@ -2,6 +2,7 @@
 
 use App\Models\User;
 
+
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
 
@@ -38,4 +39,4 @@ test('users can logout', function () {
 
     $this->assertGuest();
     $response->assertRedirect('/');
-});
+}); 
