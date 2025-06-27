@@ -6,7 +6,7 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\AutoController;
 use App\Http\Controllers\UserController;
 
-Route::resource('autos', AutoController::class);
+
 
 
 Route::get('/', function () {
@@ -25,7 +25,13 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('personas', PersonaController::class)->middleware('auth');
 
+Route::resource('autos', AutoController::class)->middleware('auth');
+
 Route::resource('users',  ProfileController::class);
+
+Route::apiResource('personas', PersonaController::class)->middleware('auth');
+
+Route::apiResource('autos', AutoController::class)->middleware('auth');
 
 
 require __DIR__.'/auth.php';

@@ -10,18 +10,18 @@ class UserTest extends TestCase
        public function test_get_users_list()
     {
         User::factory()->create();
-        User::factory()->count(2)->create();
+        User::factory()->count(1)->create(); //crea dos usuarios aleatorios (cuenta 0, 1)
 
         $response = $this-> get('/users');
         $response->assertStatus(200);
         $response->assertJsonStructure([['id','name','email','email_verified_at','created_at','updated_at' ]]);
 
-        $response-> assertJsonCount(3);
+        $response-> assertJsonCount(2);
     }
 
     public function test_get_users_details()
     {
-        $user = User::factory()->create(['name' => 'paula']);
+        $user = User::factory()->create(['name' => 'paula']); //crea un tercer usuario para esta prueba
 
         $response = $this-> get('/users/ ' . $user->id);
         $response->assertStatus(200);
